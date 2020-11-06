@@ -24,8 +24,8 @@ layoutsettings =
     "hideToolBar": true,
     "ibooksWidget": false,
     "includeThumbnailText": true,
-    "materialIconRelativeSize": 50,
-    "menuLayout": "vertical",
+    "materialIconRelativeSize": 100,
+    "menuLayout": "horizontal",
     "modelIconRelativeSize": 100,
     "parentTabName": "Parent",
     "showAutoHideButton": true,
@@ -33,7 +33,7 @@ layoutsettings =
     "sizeScrollbarWidth": 10,
     "sizeThumbnailFont": 9,
     "sizeTitlesFont": 11,
-    "studioIconRelativeSize": 50,
+    "studioIconRelativeSize": 100,
     "studioTabName": "View",
     "touchUIHeight": 15
 };
