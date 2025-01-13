@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Raleway:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --T1: 32px;
+      --T2: 13px;
+      --T3: 11px;
+      --R: 4vh;
+      --accent-color: #987025;
+      --overlay-bg: #987025F2;
+      --handle-bg: #987025CC;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f8f8f8;
+      padding: 20px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding: 0 20px;
+    }
+
+    .title-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .title {
+      font-family: 'Oswald', sans-serif;
+      font-size: var(--T1);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 700;
+    }
+
+    .outline-text {
+      color: transparent;
+      -webkit-text-stroke: 1px #ccc;
+    }
+
+    .solid-text {
+      color: #000;
+    }
+
+    .content-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 24px;
+      padding: 20px;
+    }
+
+    .post-container {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .video-card {
+      flex: 1;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .video-content {
+      position: relative;
+      width: 100%;
+    }
+
+    .video-thumbnail {
+      position: relative;
+      width: 100%;
+      padding-bottom: 177.78%;
+      background: #f0f0f0;
+    }
+
+    .video-iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      object-fit: cover;
+    }
+
+    .metrics-container {
+      width: 140px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-top: 40px;
+    }
+
+    .metric-pill {
+      background: var(--accent-color);
+      color: white;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-family: 'Raleway', sans-serif;
+      font-size: var(--T3);
+      font-weight: 400;
+      line-height: 1.4;
+      text-align: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .metric-value {
+      font-weight: 700;
+      margin-left: 4px;
+    }
+
+    .hashtags {
+      margin-top: 12px;
+      font-family: 'Raleway', sans-serif;
+      font-size: var(--T3);
+      color: #666;
+      line-height: 1.6;
+      word-wrap: break-word;
+    }
+
+    .post-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(5px);
+      z-index: 10;
+    }
+
+    .rank {
+      background: var(--accent-color);
+      color: white;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Oswald', sans-serif;
+      font-weight: 700;
+      font-size: var(--T3);
+    }
+
+    .source {
+      font-family: 'Raleway', sans-serif;
+      color: #666;
+      font-size: var(--T3);
+    }
+
+    .handle {
+      background: var(--handle-bg);
+      color: white;
+      padding: 2px 6px;
+      border-radius: 12px;
+      font-size: var(--T3);
+      text-transform: uppercase;
+      font-family: 'Oswald', sans-serif;
+      font-weight: 700;
+    }
+
+    .right-panel-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--accent-color);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Oswald', sans-serif;
+      text-transform: uppercase;
+      font-size: var(--T2);
+      font-weight: 700;
+    }
+
+    .right-panel-toggle img {
+      height: 16px;
+      width: auto;
+    }
+
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--overlay-bg);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .popup-content {
+      background: white;
+      padding: 32px;
+      border-radius: 12px;
+      max-width: 1200px;
+      width: 90%;
+      position: relative;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .popup-header {
+      background-color: var(--accent-color);
+      margin: -32px -32px 24px -32px;
+      padding: 16px 24px;
+      border-radius: 12px 12px 0 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .popup-header span {
+      color: white;
+      font-family: 'Oswald', sans-serif;
+      text-transform: uppercase;
+      font-size: var(--T2);
+      font-weight: 700;
+    }
+
+    .popup-section {
+      background: #f5f5f5;
+      padding: 24px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .popup-section h2 {
+      color: black;
+      font-family: 'Oswald', sans-serif;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      font-size: 20px;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .close-button {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 4px;
+      z-index: 10;
+    }
+
+    .show {
+      display: flex;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="title-container">
+      <h1 class="title">
+        <span class="outline-text">SOCIAL TRENDS</span>
+        <span class="solid-text">LEOPARD SNEAKERS</span>
+      </h1>
+    </div>
+    <div class="right-panel-toggle" id="keyTakeawaysBtn">
+      CLICK FOR <img src="https://github.com/farylrobin/farylrobin.github.io/blob/master/social_presentations/farylrobin_social_snapshot_11_26_2024_v2/assets/FR_LOGO_WHITE.png?raw=true" alt="Faryl Robin Logo" class="logo"> SUPPORTING INSIGHTS
+    </div>
+  </div>
+  <div class="content-container">
+    <div class="post-container">
+    <div class="video-card">
+        <div class="video-content">
+            <div class="video-thumbnail">
+                <iframe class="video-iframe" src="https://www.tiktok.com/embed/v2/7404060160349474081" allowfullscreen title="Video 1" loading="lazy"></iframe>
+            </div>
+            <div class="post-header">
+                <div class="rank">#1</div>
+                <div class="handle">@emilielassegaard</div>
+                <div class="source">Source: TikTok</div>
+            </div>
+        </div>
+    </div>
+    <div class="metrics-container">
+        <div class="metric-pill">Engagement <span class="metric-value">178.58%</span></div>
+        <div class="metric-pill">Likes <span class="metric-value">72,000</span></div>
+        <div class="metric-pill">Comments <span class="metric-value">145</span></div>
+        <div class="hashtags">#sambas #adidas #fördig #fyp #foryou #leo #leopardprint #leopard #shoes #sneakers #tips #viral #trending #backtoschoolcheck #scandinavianstyle #style</div>
+    </div>
+</div>
+
+<div class="post-container">
+    <div class="video-card">
+        <div class="video-content">
+            <div class="video-thumbnail">
+                <iframe class="video-iframe" src="https://www.tiktok.com/embed/v2/7424289314462240043" allowfullscreen title="Video 2" loading="lazy"></iframe>
+            </div>
+            <div class="post-header">
+                <div class="rank">#2</div>
+                <div class="handle">@the.moody.fam</div>
+                <div class="source">Source: TikTok</div>
+            </div>
+        </div>
+    </div>
+    <div class="metrics-container">
+        <div class="metric-pill">Engagement <span class="metric-value">61.50%</span></div>
+        <div class="metric-pill">Likes <span class="metric-value">12,400</span></div>
+        <div class="metric-pill">Comments <span class="metric-value">207</span></div>
+        <div class="hashtags">#targetfinds #targetshoes #leopardprint #leopardprintshoes #fyp #charms #decoratingshoelaces #hobbylobby #leopardshoes</div>
+    </div>
+</div>
+
+<div class="post-container">
+    <div class="video-card">
+        <div class="video-content">
+            <div class="video-thumbnail">
+                <iframe class="video-iframe" src="https://www.instagram.com/p/C24am1FrkQb/embed" allowfullscreen title="Video 3" loading="lazy"></iframe>
+            </div>
+            <div class="post-header">
+                <div class="rank">#3</div>
+                <div class="handle">@camillemartinot</div>
+                <div class="source">Source: Instagram</div>
+            </div>
+        </div>
+    </div>
+    <div class="metrics-container">
+        <div class="metric-pill">Engagement <span class="metric-value">14.41%</span></div>
+        <div class="metric-pill">Likes <span class="metric-value">3,821</span></div>
+        <div class="metric-pill">Comments <span class="metric-value">62</span></div>
+        
+    </div>
+</div>
+
+<div class="post-container">
+    <div class="video-card">
+        <div class="video-content">
+            <div class="video-thumbnail">
+                <iframe class="video-iframe" src="https://www.instagram.com/p/DBwNO29p5gE/embed" allowfullscreen title="Video 4" loading="lazy"></iframe>
+            </div>
+            <div class="post-header">
+                <div class="rank">#4</div>
+                <div class="handle">@polaris_uy</div>
+                <div class="source">Source: Instagram</div>
+            </div>
+        </div>
+    </div>
+    <div class="metrics-container">
+        <div class="metric-pill">Engagement <span class="metric-value">12.51%</span></div>
+        <div class="metric-pill">Likes <span class="metric-value">753</span></div>
+        <div class="metric-pill">Comments <span class="metric-value">69</span></div>
+        
+    </div>
+</div>
+
+<div class="post-container">
+    <div class="video-card">
+        <div class="video-content">
+            <div class="video-thumbnail">
+                <iframe class="video-iframe" src="https://www.instagram.com/p/C2FuMlardns/embed" allowfullscreen title="Video 5" loading="lazy"></iframe>
+            </div>
+            <div class="post-header">
+                <div class="rank">#5</div>
+                <div class="handle">@camillemartinot</div>
+                <div class="source">Source: Instagram</div>
+            </div>
+        </div>
+    </div>
+    <div class="metrics-container">
+        <div class="metric-pill">Engagement <span class="metric-value">12.37%</span></div>
+        <div class="metric-pill">Likes <span class="metric-value">3,275</span></div>
+        <div class="metric-pill">Comments <span class="metric-value">58</span></div>
+        
+    </div>
+</div>
+
+<div class="post-container">
+    <div class="video-card">
+        <div class="video-content">
+            <div class="video-thumbnail">
+                <iframe class="video-iframe" src="https://www.tiktok.com/embed/v2/7333396674187922734" allowfullscreen title="Video 6" loading="lazy"></iframe>
+            </div>
+            <div class="post-header">
+                <div class="rank">#6</div>
+                <div class="handle">@mikayla.vallati</div>
+                <div class="source">Source: TikTok</div>
+            </div>
+        </div>
+    </div>
+    <div class="metrics-container">
+        <div class="metric-pill">Engagement <span class="metric-value">4.16%</span></div>
+        <div class="metric-pill">Likes <span class="metric-value">17,900</span></div>
+        <div class="metric-pill">Comments <span class="metric-value">72</span></div>
+        <div class="hashtags">#adidassambapony #sneakers #sneakerunboxing #sneakercollection #sneakertiktok #sneakershopping #sneakeraddict #adidas #adidassamba #elevated #walesbonnnersambas #stockx #leopardprint #adidasleopard #trends #viral #newsneakers #asmr #unboxing #pinterestinspo #pinterestaesthetic</div>
+    </div>
+</div>
+
+<div class="post-container">
+    <div class="video-card">
+        <div class="video-content">
+            <div class="video-thumbnail">
+                <iframe class="video-iframe" src="https://www.instagram.com/p/DAOZZ0yi7fs/embed" allowfullscreen title="Video 7" loading="lazy"></iframe>
+            </div>
+            <div class="post-header">
+                <div class="rank">#7</div>
+                <div class="handle">@catherinevilhem</div>
+                <div class="source">Source: Instagram</div>
+            </div>
+        </div>
+    </div>
+    <div class="metrics-container">
+        <div class="metric-pill">Engagement <span class="metric-value">2.00%</span></div>
+        <div class="metric-pill">Likes <span class="metric-value">2,467</span></div>
+        <div class="metric-pill">Comments <span class="metric-value">137</span></div>
+        <div class="hashtags">#falloutfitideas #falloutfitinspo #parisianstyle #parisiennestyle #popofred #spartoogram #coachbag #effortlessstyle #scandistyle #leopardoutfit</div>
+    </div>
+</div>
+
+<div class="post-container">
+    <div class="video-card">
+        <div class="video-content">
+            <div class="video-thumbnail">
+                <iframe class="video-iframe" src="https://www.tiktok.com/embed/v2/7416001900660772138" allowfullscreen title="Video 8" loading="lazy"></iframe>
+            </div>
+            <div class="post-header">
+                <div class="rank">#8</div>
+                <div class="handle">@truthfullycharlie</div>
+                <div class="source">Source: TikTok</div>
+            </div>
+        </div>
+    </div>
+    <div class="metrics-container">
+        <div class="metric-pill">Engagement <span class="metric-value">0.62%</span></div>
+        <div class="metric-pill">Likes <span class="metric-value">972</span></div>
+        <div class="metric-pill">Comments <span class="metric-value">27</span></div>
+        <div class="hashtags">#fallfashion</div>
+    </div>
+</div>
+  </div>
+  <div class="popup-overlay" id="keyTakeawaysPopup">
+    <div class="popup-content">
+      <button class="close-button" onclick="closePopup()">×</button>
+      <div class="popup-header">
+        <img src="https://github.com/farylrobin/farylrobin.github.io/blob/master/social_presentations/farylrobin_social_snapshot_11_26_2024_v2/assets/FR_LOGO_WHITE.png?raw=true" alt="Faryl Robin Logo" class="logo">
+        <span>SUPPORTING INSIGHTS</span>
+      </div>
+      <div class="popup-section">
+        <h2>SUPPORTING INSIGHTS</h2>
+        <div style="
+          display: flex; 
+          flex-wrap: wrap; 
+          gap: 20px; 
+          justify-content: center;
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 20px 0;
+        ">
+    
+                <div style="
+                  flex: 1 1 400px;
+                  min-width: 400px;
+                  max-width: 800px;
+                ">
+                    <img 
+                      src="https://app.box.com/shared/static/h8q3rxse45sh0nqrfcro3bollg1yx234" 
+                      alt="Additional Insight" 
+                      style="
+                        width: 100%;
+                        height: auto;
+                        border-radius: 12px;
+                        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+                        transition: transform 0.3s ease;
+                      "
+                      onmouseover="this.style.transform='scale(1.02)'"
+                      onmouseout="this.style.transform='scale(1)'"
+                    />
+                </div>
+            
+                <div style="
+                  flex: 1 1 400px;
+                  min-width: 400px;
+                  max-width: 800px;
+                ">
+                    <img 
+                      src="https://app.box.com/shared/static/irppfyolf93ubykftmvr7xlsqdn084el" 
+                      alt="Additional Insight" 
+                      style="
+                        width: 100%;
+                        height: auto;
+                        border-radius: 12px;
+                        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+                        transition: transform 0.3s ease;
+                      "
+                      onmouseover="this.style.transform='scale(1.02)'"
+                      onmouseout="this.style.transform='scale(1)'"
+                    />
+                </div>
+            
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.querySelector('.right-panel-toggle').addEventListener('click', function() {
+      document.getElementById('keyTakeawaysPopup').classList.add('show');
+    });
+    function closePopup() {
+      document.getElementById('keyTakeawaysPopup').classList.remove('show');
+    }
+  </script>
+</body>
+</html>
